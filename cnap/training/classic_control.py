@@ -1,17 +1,17 @@
 import os
-
+import sys
 import numpy as np
 import torch
 import torch.optim as optim
 
-from arguments import get_args
-from models.ppo.ppo import PPO
-from models.ppo.policy import Policy
-from models.ppo.rollout import gather_fixed_episodes_rollout
-from models.transe.transe_classic import TransE
-from models.ppo.utils import set_seed, cleanup_log_dir
-from models.executor.gnn import Executor
-from environment.env import make_vec_envs
+from cnap.arguments import get_args
+from cnap.models.ppo.ppo import PPO
+from cnap.models.ppo.policy import Policy
+from cnap.models.ppo.rollout import gather_fixed_episodes_rollout
+from cnap.models.transe.transe_classic import TransE
+from cnap.models.ppo.utils import set_seed, cleanup_log_dir
+from cnap.models.executor.gnn import Executor
+from cnap.environment.env import make_vec_envs
 
 
 def run_fixed_num_episodes(env, policy, rollout, num_episodes, deterministic, file):
@@ -39,8 +39,9 @@ def run_fixed_num_episodes(env, policy, rollout, num_episodes, deterministic, fi
     return average_reward
 
 
-if __name__ == '__main__':
-    args = get_args()
+def main(args=None):
+    if args is None:
+        args = get_args()
 
     model_name = 'xlvin-r' if args.graph_type == "erdos-renyi" else 'xlvin-cp'
     if args.include_executor:
@@ -97,7 +98,7 @@ if __name__ == '__main__':
                         activation=args.activation,
                         layernorm=args.layernorm,
                         neighbour_aggregation=args.neighbour_aggregation).to(args.device)
-    executor_path = f'../models/executor/trained_executor/{args.graph_type}-gnnstep{args.gnn_steps}-'\
+    executor_path = f'cnap/models/executor/trained_executor/{args.graph_type}-gnnstep{args.gnn_steps}-' \
                     f'act{args.activation}-ln{args.layernorm}.pt'
     if args.include_executor:
         executor.load_state_dict(torch.load(executor_path, map_location=args.device))
@@ -212,3 +213,7 @@ if __name__ == '__main__':
     if args.save_model:
         f.writelines("\n Largest average reward = " + str(max_average_reward))
         f.close()
+
+
+if __name__ == "__main__":
+    sys.exit(main())

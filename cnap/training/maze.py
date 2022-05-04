@@ -1,15 +1,16 @@
+import sys
 import torch
 import torch.optim as optim
 import numpy as np
 import pickle
 
-from arguments import get_args
-from models.transe.transe_maze import TransE
-from models.executor.gnn import Executor
-from models.ppo.ppo import PPO
-from models.ppo.policy import Policy
-from models.ppo.rollout import gather_maze_rollout
-from environment.env import make_vec_maze_envs, test_vec_envs
+from cnap.arguments import get_args
+from cnap.models.transe.transe_maze import TransE
+from cnap.models.executor.gnn import Executor
+from cnap.models.ppo.ppo import PPO
+from cnap.models.ppo.policy import Policy
+from cnap.models.ppo.rollout import gather_maze_rollout
+from cnap.environment.env import make_vec_maze_envs, test_vec_envs
 
 
 def test_run_fixed_number_mazes(env, policy, rollout, num_test_mazes, pass_threshold):
@@ -71,8 +72,9 @@ def test_hold_out_mazes(test_maze_size, test_indices, policy, num_processes):
     return overall_perc, (test_passed, test_total, test_perc)
 
 
-if __name__ == "__main__":
-    args = get_args()
+def main(args=None):
+    if args is None:
+        args = get_args()
 
     # Device
     if args.device == 'cuda':
@@ -82,8 +84,8 @@ if __name__ == "__main__":
     print("Device: ", args.device)
 
     # Load dataset
-    train_indices = pickle.load(open('../environment/maze/dataset/train_8*8_maze_by_level.pkl', 'rb'))
-    test_indices = pickle.load(open('../environment/maze/dataset/test_8*8_maze_by_level.pkl', 'rb'))
+    train_indices = pickle.load(open('cnap/environment/maze/dataset/train_8*8_maze_by_level.pkl', 'rb'))
+    test_indices = pickle.load(open('cnap/environment/maze/dataset/test_8*8_maze_by_level.pkl', 'rb'))
 
     # TransE
     transe = TransE(state_embedding_dimension=args.transe_embedding_dim,
@@ -100,7 +102,7 @@ if __name__ == "__main__":
                         activation=args.activation,
                         layernorm=args.layernorm,
                         gnn_steps=args.gnn_steps).to(args.device)
-    executor_path = f'../models/executor/trained_executor/{args.graph_type}' \
+    executor_path = f'cnap/models/executor/trained_executor/{args.graph_type}' \
                     f'-gnnstep{args.gnn_steps}-act{args.activation}-' \
                     f'ln{args.layernorm}-hidden{args.gnn_hidden_dim}.pt'
     if args.include_executor:
@@ -198,3 +200,5 @@ if __name__ == "__main__":
                     break
 
 
+if __name__ == "__main__":
+    sys.exit(main())

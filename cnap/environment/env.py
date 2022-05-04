@@ -9,7 +9,7 @@ from stable_baselines3.common.vec_env.subproc_vec_env import SubprocVecEnv
 from stable_baselines3.common.vec_env.vec_normalize import VecNormalize as VecNormalize_
 from stable_baselines3.common.monitor import Monitor
 
-from environment.maze.maze_env import MazeEnv
+from cnap.environment.maze.maze_env import MazeEnv
 
 
 def construct_mask(bins):

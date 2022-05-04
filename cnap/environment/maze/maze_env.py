@@ -30,7 +30,7 @@ class MazeEnv(gym.Env):
         self.observation_space = spaces.Box(low=0, high=maze_size, shape=(3, maze_size, maze_size), dtype=np.float32)
 
         if maze_size == 8:
-            file = '../environment/maze/dataset/gridworld_8x8.npz'
+            file = 'cnap/environment/maze/dataset/gridworld_8x8.npz'
         else:
             raise NotImplementedError
 

@@ -1,18 +1,19 @@
 import os
+import sys
 import json
 import numpy as np
 import torch
 import torch.optim as optim
 from collections import deque
 
-from arguments import get_args
-from models.transe.transe_mujoco import TransE
-from models.executor.gnn import Executor
-from models.ppo.ppo import PPO
-from models.ppo.policy import Policy
-from models.ppo.rollout import RolloutStorage
-from models.ppo.utils import set_seed, update_linear_schedule, cleanup_log_dir
-from environment.env import make_vec_envs
+from cnap.arguments import get_args
+from cnap.models.transe.transe_mujoco import TransE
+from cnap.models.executor.gnn import Executor
+from cnap.models.ppo.ppo import PPO
+from cnap.models.ppo.policy import Policy
+from cnap.models.ppo.rollout import RolloutStorage
+from cnap.models.ppo.utils import set_seed, update_linear_schedule, cleanup_log_dir
+from cnap.environment.env import make_vec_envs
 
 
 def evaluate(env, policy, rollout, num_episodes, deterministic=False):
@@ -34,8 +35,9 @@ def evaluate(env, policy, rollout, num_episodes, deterministic=False):
         f"Rollout {rollout}: Average episode reward = {np.average(episode_rewards)} from total {num_episodes} episodes")
 
 
-if __name__ == '__main__':
-    args = get_args()
+def main(args=None):
+    if args is None:
+        args = get_args()
 
     if args.include_executor:
         subdir = f"{args.env}/xlvin_{args.action_bins}bins_{args.gnn_steps}gnnsteps_{args.num_neighbours}neighbours_" \
@@ -78,7 +80,7 @@ if __name__ == '__main__':
                         activation=args.activation,
                         layernorm=args.layernorm,
                         neighbour_aggregation=args.neighbour_aggregation).to(args.device)
-    executor_path = f'../models/executor/trained_executor/{args.graph_type}' \
+    executor_path = f'cnap/models/executor/trained_executor/{args.graph_type}' \
                     f'-gnnstep{args.gnn_steps}-act{args.activation}-' \
                     f'ln{args.layernorm}-hidden{args.gnn_hidden_dim}.pt'
     if args.include_executor:
@@ -252,3 +254,7 @@ if __name__ == '__main__':
 
         if args.evaluate:
             evaluate(env=test_envs, policy=policy, rollout=j, num_episodes=args.num_test_episodes, deterministic=True)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

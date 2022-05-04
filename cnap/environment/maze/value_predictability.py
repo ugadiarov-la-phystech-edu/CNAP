@@ -4,10 +4,10 @@ import pickle
 from gym import spaces
 from sklearn.linear_model import LinearRegression
 
-from models.transe.transe_maze import TransE
-from models.executor.gnn import Executor
-from models.ppo.policy import Policy
-from environment.maze.maze_env import MazeEnv
+from cnap.models.transe.transe_maze import TransE
+from cnap.models.executor.gnn import Executor
+from cnap.models.ppo.policy import Policy
+from cnap.environment.maze.maze_env import MazeEnv
 
 
 def generate_mdp(grid, goal_map):
@@ -81,9 +81,9 @@ def v_star_predictability(transe, executor, policy, test_indices, test_maze_size
         print("Level ", level, "has ", len(test_indices[level]), " mazes.")
 
         # Load pre-trained agent using training mazes up to current level
-        transe.load_state_dict(torch.load(f"trained/trained_model_level{level}.pt", map_location=torch.device('cpu'))['transe'])
-        executor.load_state_dict(torch.load(f"trained/trained_model_level{level}.pt", map_location=torch.device('cpu'))['executor'])
-        policy.load_state_dict(torch.load(f"trained/trained_model_level{level}.pt", map_location=torch.device('cpu'))['policy'])
+        transe.load_state_dict(torch.load(f"cnap/environment/maze/trained/trained_model_level{level}.pt", map_location=torch.device('cpu'))['transe'])
+        executor.load_state_dict(torch.load(f"cnap/environment/maze/trained/trained_model_level{level}.pt", map_location=torch.device('cpu'))['executor'])
+        policy.load_state_dict(torch.load(f"cnap/environment/maze/trained/trained_model_level{level}.pt", map_location=torch.device('cpu'))['policy'])
 
         test_env = MazeEnv(maze_size=test_maze_size, maze_indices_list=all_test_indices, train=False)
 
@@ -144,7 +144,7 @@ if __name__ == "__main__":
     env_action_dim = 8
     action_space = spaces.Discrete(env_action_dim)
     num_processes = 15
-    test_indices = pickle.load(open('dataset/test_8*8_maze_by_level.pkl', 'rb'))
+    test_indices = pickle.load(open('cnap/environment/maze/dataset/test_8*8_maze_by_level.pkl', 'rb'))
     " End of parameters"
 
     include_executor = True

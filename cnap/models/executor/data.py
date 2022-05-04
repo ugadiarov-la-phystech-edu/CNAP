@@ -1,7 +1,7 @@
 import torch
 import networkx as nx
 
-from models.executor.utils import GenerateGraph, cartpole_graph, find_policy
+from cnap.models.executor.utils import GenerateGraph, cartpole_graph, find_policy
 
 
 class GenerateData(torch.utils.data.IterableDataset):

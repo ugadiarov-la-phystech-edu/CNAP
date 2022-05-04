@@ -2,9 +2,9 @@ import gym
 import torch
 import numpy as np
 
-from models.transe.arguments import get_args
+from cnap.models.transe.arguments import get_args
 from torch.utils.data.sampler import BatchSampler, SubsetRandomSampler
-from environment.env import make_vec_envs
+from cnap.environment.env import make_vec_envs
 
 
 # Generate training data for discrete action space
@@ -115,9 +115,9 @@ if __name__ == "__main__":
     args = get_args()
 
     if args.env in ['cartpole', 'acrobot', 'mountaincar', 'mountaincar-continuous', 'pendulum']:
-        from models.transe.transe_classic import TransE
+        from cnap.models.transe.transe_classic import TransE
     elif args.env in ['walker', 'swimmer']:
-        from models.transe.transe_mujoco import TransE
+        from cnap.models.transe.transe_mujoco import TransE
     else:
         raise NotImplementedError
 

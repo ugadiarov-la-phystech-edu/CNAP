@@ -1,10 +1,10 @@
 import torch
 import numpy as np
 
-from models.executor.arguments import get_args
-from models.executor.gnn import Executor
-from models.executor.data import GenerateData
-from models.executor.utils import find_policy
+from cnap.models.executor.arguments import get_args
+from cnap.models.executor.gnn import Executor
+from cnap.models.executor.data import GenerateData
+from cnap.models.executor.utils import find_policy
 
 
 def loss_func(output, target):
@@ -155,7 +155,7 @@ if __name__ == "__main__":
              cartpole_thresh=args.cartpole_thresh,
              device=args.device)
     torch.save(executor.state_dict(),
-               f"{args.graph_type}-gnnstep{args.gnn_steps}-act{args.activation}-ln{args.layernorm}.pt")
+               f"cnap/models/executor/trained_executor/{args.graph_type}-gnnstep{args.gnn_steps}-act{args.activation}-ln{args.layernorm}.pt")
 
     if args.test:
         if not args.test_graph_cartpole:

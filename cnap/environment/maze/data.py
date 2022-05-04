@@ -53,11 +53,11 @@ def sort_maze_by_level(file, train=False):
                     queue.append((newx, newy, dist))
 
     if train:
-        pickle.dump(level_dict, open(f"dataset/train_{maze_size}*{maze_size}_maze_by_level.pkl", "wb"))
+        pickle.dump(level_dict, open(f"cnap/environment/maze/dataset/train_{maze_size}*{maze_size}_maze_by_level.pkl", "wb"))
     else:
-        pickle.dump(level_dict, open(f"dataset/test_{maze_size}*{maze_size}_maze_by_level.pkl", "wb"))
+        pickle.dump(level_dict, open(f"cnap/environment/maze/dataset/test_{maze_size}*{maze_size}_maze_by_level.pkl", "wb"))
 
 
 if __name__ == "__main__":
-    sort_maze_by_level("dataset/gridworld_8x8.npz", True)
-    sort_maze_by_level("dataset/gridworld_8x8.npz", False)
+    sort_maze_by_level("cnap/environment/maze/dataset/gridworld_8x8.npz", True)
+    sort_maze_by_level("cnap/environment/maze/dataset/gridworld_8x8.npz", False)
