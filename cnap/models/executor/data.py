@@ -1,7 +1,7 @@
 import torch
 import networkx as nx
 
-from cnap.models.executor.utils import GenerateGraph, cartpole_graph, find_policy
+from cnap.models.executor.utils import GenerateGraph, cartpole_graph, find_policy, deterministic_k_mdp
 
 
 class GenerateData(torch.utils.data.IterableDataset):
@@ -27,8 +27,12 @@ class GenerateData(torch.utils.data.IterableDataset):
 
         if graph_type == 'cartpole':
             self.cartpole_graph = True
+        elif graph_type == 'det':
+            self.cartpole_graph = False
+            self.det_graph = True
         else:
             self.cartpole_graph = False
+            self.det_graph = False
             self.graph_generator = GenerateGraph(graph_type=graph_type,
                                                  size=self.num_states,
                                                  degree=int(self.num_states * 0.5))
@@ -108,6 +112,8 @@ class GenerateData(torch.utils.data.IterableDataset):
                                                 accel=self.cartpole_accel,
                                                 thresh=self.cartpole_thresh,
                                                 initial_position=self.cartpole_initial_position)
+        elif self.det_graph:
+            transition, reward = deterministic_k_mdp(self.num_states, self.num_actions)
         else:
             valid = False
             while not valid:

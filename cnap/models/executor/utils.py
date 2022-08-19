@@ -179,3 +179,13 @@ def cartpole_graph(depth=10, delta=0.1, accel=0.05, thresh=0.5, initial_position
 def find_policy(p, r, discount, v):
     max_a, argmax_a = torch.max(r + discount * torch.einsum('ijk,k->ji', p, v), dim=1)
     return argmax_a
+
+
+def deterministic_k_mdp(nb_states, nb_actions):
+    P = torch.zeros(nb_actions, nb_states, nb_states)
+    R = torch.randn(nb_states, nb_actions)
+    for s in range(nb_states):
+        for act in range(nb_actions):
+            s_prime = np.random.choice(nb_states)
+            P[act][s][s_prime] = 1.0
+    return P, R
